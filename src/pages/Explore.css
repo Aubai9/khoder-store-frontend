@@ -1,0 +1,403 @@
+/* ======================================================
+   🔍 ملف التنسيق المطور والمصفى لصفحة الاستكشاف
+   File: src/pages/Explore.css
+   ====================================================== */
+
+:root {
+  --primary-color: #ff6b00;
+  --secondary-color: #001f3f;
+  --bg-light: #f1f5f9;
+  --text-dark: #0f172a;
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
+  --white: #ffffff;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* الحاوية الأساسية لصفحة الاستكشاف - نضمن عدم تقيدها بـ max-width الموبايل الخاص بالـ Home */
+.explore-container {
+  width: 100%;
+  max-width: 1400px !important;
+  margin: 0 auto;
+  padding: 16px;
+  min-height: 100vh;
+  padding-bottom: 100px;
+  animation: pageFadeIn 0.4s ease-out forwards;
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 1. صندوق البحث */
+.search-box-wrapper {
+  position: relative;
+  margin-bottom: 24px;
+  width: 100%;
+}
+
+.search-input {
+  width: 100% !important;
+  padding: 14px 48px 14px 16px !important;
+  border: 2px solid transparent !important;
+  border-radius: 16px !important;
+  font-size: 16px;
+  font-weight: 500;
+  background-color: var(--bg-light) !important;
+  color: var(--text-dark);
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+
+.search-input:focus {
+  border-color: var(--primary-color) !important;
+  background-color: var(--white) !important;
+  box-shadow: 0 0 0 4px rgba(255, 107, 0, 0.1) !important;
+  outline: none;
+}
+
+.search-icon-inside {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 20px;
+  pointer-events: none;
+  transition: var(--transition);
+}
+
+.search-input:focus + .search-icon-inside {
+  color: var(--primary-color);
+}
+
+/* 2. الفلاتر */
+.filter-group-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 20px 4px 12px;
+  display: block;
+}
+
+.filter-scroll-row {
+  display: flex;
+  overflow-x: auto;
+  gap: 8px;
+  padding: 4px;
+  margin-bottom: 16px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.filter-scroll-row::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-pill {
+  padding: 10px 20px !important;
+  background-color: var(--white) !important;
+  color: var(--text-muted) !important;
+  border: 1.5px solid var(--border-color) !important;
+  border-radius: 12px !important; /* إلغاء الـ 100px القادمة من الـ Home */
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.filter-pill:hover {
+  border-color: var(--primary-color) !important;
+  color: var(--primary-color) !important;
+}
+
+.filter-pill.active {
+  background-color: var(--secondary-color) !important;
+  color: var(--white) !important;
+  border-color: var(--secondary-color) !important;
+}
+
+.filter-pill.active-orange {
+  background-color: var(--primary-color) !important;
+  color: var(--white) !important;
+  border-color: var(--primary-color) !important;
+}
+
+/* 3. عداد النتائج */
+.results-count {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+  padding: 0 4px;
+  font-weight: 500;
+}
+
+/* 4. شبكة المنتجات (تصفير كامل لتعارضات الـ Home) */
+.pwa-products-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(225px, 1fr)) !important;
+  gap: 16px !important;
+  width: 100% !important;
+  padding: 20px !important;
+}
+
+/* 5. بطاقة المنتج */
+.pwa-product-card {
+  background: var(--white) !important;
+  border-radius: 20px !important;
+  padding: 12px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  position: relative !important;
+  box-shadow: var(--shadow-sm) !important;
+  transition: var(--transition) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.pwa-product-card:hover {
+  transform: translateY(-5px) scale(1) !important; /* إلغاء الـ scale(1.02) الخاص بالـ Home */
+  box-shadow: var(--shadow-md) !important;
+}
+
+/* غلاف الصورة - تصفير تعارض الأبعاد والـ Flex */
+.pwa-product-img-wrapper {
+  position: relative !important;
+  width: 100% !important;
+  height: auto !important; /* إلغاء الـ 200px الثابتة القادمة من الـ Home */
+  aspect-ratio: 1/1 !important; /* إجبار الصورة لتكون مربعة تماماً في الاستكشاف */
+  background-color: #f8fafc !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  margin-bottom: 12px !important;
+  display: flex !important;
+  flex-direction: row !important; /* تعديل ليتناسب مع الأزرار العائمة */
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.pwa-product-img-wrapper img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  transition: var(--transition);
+}
+
+.pwa-product-card:hover .pwa-product-img-wrapper img {
+  transform: scale(1.08) !important;
+}
+
+/* حل مشكلة تضارب تlocalization شارة نفاد الكمية */
+.out-of-stock-badge {
+  position: absolute !important;
+  top: 8px !important;
+  right: 8px !important;
+  left: auto !important; /* إلغاء تصفير الـ left: 50% القادم من Home */
+  transform: none !important; /* إلغاء الـ transform القادم من Home */
+  background: rgba(15, 23, 42, 0.8) !important;
+  color: white !important;
+  padding: 4px 8px !important;
+  border-radius: 8px !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  z-index: 2 !important;
+}
+
+.admin-quick-edit-btn {
+  position: absolute !important;
+  top: 8px !important;
+  left: 8px !important;
+  right: auto !important;
+  background: #ffffff !important;
+  color: var(--text-muted) !important;
+  border: none !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  box-shadow: var(--shadow-sm) !important;
+  z-index: 3 !important;
+  transition: var(--transition) !important;
+}
+
+/* حل مشكلة تمدد وتعارض اتجاهات زر المفضلة */
+.pwa-fav-btn {
+  position: absolute !important;
+  top: 8px !important;
+  left: 8px !important;
+  right: auto !important; /* إلغاء الـ right: 10px الموروث من Home.css */
+  background: var(--white) !important;
+  border: none !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  box-shadow: var(--shadow-sm) !important;
+  z-index: 3 !important;
+  transition: var(--transition) !important;
+}
+
+.pwa-fav-btn:hover {
+  transform: scale(1.1) !important;
+}
+
+/* تفاصيل المنتج */
+.pwa-brand-rating {
+  font-size: 11px !important;
+  color: var(--primary-color) !important;
+  font-weight: 700 !important;
+  margin-bottom: 4px !important;
+  text-transform: uppercase !important;
+}
+
+.pwa-product-title {
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  color: var(--secondary-color) !important;
+  margin-bottom: 8px !important;
+  line-height: 1.4 !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  height: 40px !important; /* الحفاظ على توحيد الارتفاع لعناوين الاستكشاف */
+}
+
+.pwa-prices {
+  margin-top: auto !important;
+  margin-bottom: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.pwa-current-price {
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  color: var(--secondary-color) !important;
+}
+
+.pwa-add-cart {
+  width: 100% !important;
+  padding: 10px !important;
+  border-radius: 12px !important;
+  border: none !important;
+  background-color: #001f3f !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  transition: var(--transition) !important;
+}
+
+.pwa-add-cart:hover:not(:disabled) {
+  background-color: var(--primary-color) !important;
+  color: var(--white) !important;
+}
+
+.pwa-add-cart.out-of-stock {
+  background-color: #f1f5f9 !important;
+  color: #94a3b8 !important;
+  cursor: not-allowed !important;
+}
+
+/* ======================================================
+     📱 استعلامات الوسائط (Media Queries) المتجاوبة والآمنة
+     ====================================================== */
+
+@media (max-width: 360px) {
+  .pwa-products-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (min-width: 640px) {
+  .explore-container {
+    padding: 24px;
+  }
+  .pwa-products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
+    gap: 20px !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .explore-container {
+    padding: 40px;
+  }
+  .search-box-wrapper {
+    max-width: 700px;
+    margin: 0 auto 40px;
+  }
+  .filter-scroll-row {
+    justify-content: center;
+    flex-wrap: wrap;
+    overflow: visible;
+  }
+  .pwa-products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)) !important;
+    gap: 24px !important;
+  }
+  .filter-group-title {
+    text-align: center;
+    font-size: 18px;
+  }
+  .results-count {
+    text-align: center;
+    font-size: 16px;
+    margin-top: 20px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .pwa-products-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+}
+
+/* تنسيق الـ Loader */
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+}
+
+.sleek-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--bg-light);
+  border-top: 4px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

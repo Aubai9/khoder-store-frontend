@@ -1,0 +1,446 @@
+/* src/pages/Cart.css */
+
+.cart-pwa-container {
+  padding: 20px;
+}
+
+/* 1. الشريط العلوي */
+.cart-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.cart-back-btn {
+  color: #001f3f;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: 0.2s;
+}
+
+.cart-back-btn:hover {
+  color: #ff6b00;
+  transform: translateX(3px);
+}
+
+.cart-top-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #001f3f;
+  margin: 0;
+}
+
+.cart-top-fav {
+  color: #94a3b8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: 0.2s;
+}
+
+.cart-top-fav:hover {
+  color: #ef4444;
+}
+
+/* التخطيط المرن (تحت بعض افتراضياً للموبايل) */
+.cart-split-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* 2. قائمة كروت المنتجات */
+.cart-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cart-item-modern {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  background: white;
+  padding: 10px 0;
+}
+
+/* مربع الصورة المنحني (أصبح قابلاً للنقر) */
+.cart-item-img-box {
+  width: 120px;
+  height: 120px;
+  background-color: #f1f5f9;
+  border-radius: 16px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  cursor: pointer; /* جعل الماوس يظهر كيد عند المرور فوق الصورة */
+  transition: transform 0.2s ease; /* حركة ناعمة */
+}
+
+/* حركة انكماش خفيفة جداً عند النقر ليعطي إحساس التفاعل */
+.cart-item-img-box:active {
+  transform: scale(0.96);
+}
+
+.cart-item-img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* خيار التحديد العائم */
+.cart-checkbox-wrapper {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  z-index: 10;
+  background-color: rgba(255, 255, 255, 0.9);
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #94a3b8;
+  border: 1.5px solid #cbd5e1;
+  transition: 0.2s;
+}
+
+.cart-checkbox-wrapper.checked {
+  background-color: #001f3f; /* لون كحلي متناسق للتحديد المكتمل */
+  color: white;
+  border-color: #001f3f;
+}
+
+/* معلومات المنتج */
+.cart-item-details {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cart-item-details h3 {
+  font-size: 15px;
+  font-weight: 800;
+  color: #001f3f;
+}
+
+.cart-item-details .sub-info {
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.cart-item-details .price {
+  font-size: 16px;
+  font-weight: 800;
+  color: #001f3f;
+  margin-top: 4px;
+}
+
+/* صف أزرار التحكم بالكمية والحذف */
+.cart-controls-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.cart-trash-btn {
+  background: none;
+  border: 1px solid #cbd5e1;
+  color: #64748b;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.cart-trash-btn:hover {
+  background-color: #fee2e2;
+  color: #ef4444;
+  border-color: #fecaca;
+}
+
+/* أداة اختيار الكمية */
+.cart-qty-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.qty-btn-minus {
+  background-color: white;
+  border: 1.5px solid #001f3f;
+  color: #001f3f;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.qty-value-box {
+  background-color: #f1f5f9;
+  color: #001f3f;
+  width: 38px;
+  height: 34px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 14px;
+  border-radius: 8px;
+}
+
+.qty-btn-plus {
+  background-color: #001f3f;
+  color: white;
+  border: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* 3. قسم الفاتورة الأنيق */
+.cart-summary-card {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  height: fit-content; /* لكي لا تتمدد الفاتورة طولياً على اللابتوب */
+}
+
+.cart-summary-card h3 {
+  color: #001f3f;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.cart-summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  font-weight: 800;
+  color: #001f3f;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed #e2e8f0;
+}
+
+.cart-checkout-btn {
+  width: 100%;
+  padding: 13px;
+  background-color: #ff6b00;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.cart-checkout-btn:hover {
+  background-color: #e05e00;
+}
+
+/* ======================================================
+   💻 التخطيط الجانبي الفخم للابتوب (Desktop Side-by-Side)
+   ====================================================== */
+@media (min-width: 768px) {
+  /* تقسيم الصفحة لعمودين: المنتجات يمين، والفاتورة يسار */
+  .cart-split-layout {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr; /* المنتجات تأخذ مساحة أكبر */
+    gap: 35px;
+    align-items: start; /* لكي تبقى الفاتورة ثابتة بالأعلى عند النزول */
+  }
+
+  .cart-pwa-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+/* تصميم صفحة السلة الفارغة الفخمة (Empty State) */
+.empty-cart-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  animation: fadeIn 0.25s ease-out;
+}
+
+/* الدائرة المتوهجة للأيقونة */
+.empty-cart-icon-box {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background-color: rgba(255, 107, 0, 0.08); /* توهج أورنج ناعم */
+  color: #ff6b00;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  box-shadow: 0 6px 20px rgba(255, 107, 0, 0.04);
+}
+
+.empty-cart-wrapper h3 {
+  color: #001f3f; /* كحلي */
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.empty-cart-wrapper p {
+  color: #64748b;
+  font-size: 13.5px;
+  max-width: 340px;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+/* زر التسوق المتدرج بالأورنج الفخم */
+.empty-cart-btn {
+  background: linear-gradient(90deg, #ff6b00 0%, #ff8c3a 100%);
+  color: white;
+  text-decoration: none;
+  padding: 12px 35px;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 15px;
+  box-shadow: 0 4px 15px rgba(255, 107, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.empty-cart-btn:hover {
+  transform: translateY(-2px); /* حركة ارتفاع ناعمة عند مرور الماوس */
+  box-shadow: 0 6px 20px rgba(255, 107, 0, 0.3);
+}
+
+.empty-cart-btn:active {
+  transform: translateY(0);
+}
+/* ======================================================
+   🔔 حركات أنيميشن السلة والإشعار العائم المطور
+   ====================================================== */
+
+/* 1. أنيميشن نبضة أيقونة السلة العلوية */
+@keyframes cartBounce {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.25);
+  } /* تكبير ارتدادي ناعم */
+  100% {
+    transform: scale(1);
+  }
+}
+
+.pwa-cart-icon-wrapper.pulse {
+  animation: cartBounce 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) ease-out;
+  background-color: rgba(255, 107, 0, 0.15); /* إضاءة أورنج خفيفة */
+  color: #ff6b00;
+}
+
+/* 2. تصميم وحركة الإشعار المنبثق العائم (Toast) */
+.pwa-toast {
+  position: fixed;
+  bottom: 85px; /* يظهر فوق شريط التنقل السفلي للموبايل تماماً */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #0f172a; /* كحلي داكن جداً وسلايت فخم */
+  color: #ffffff;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 13.5px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+
+  /* تفعيل حركتين: انزلاق للأعلى ثم انزلاق واختفاء للأسفل تلقائياً */
+  animation:
+    toastSlideUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+    toastSlideDown 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) 2.15s forwards;
+}
+
+/* حركة الانزلاق للأعلى */
+@keyframes toastSlideUp {
+  from {
+    transform: translate(-50%, 25px);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+/* حركة الاختفاء والنزول للأسفل */
+@keyframes toastSlideDown {
+  from {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+  to {
+    transform: translate(-50%, 25px);
+    opacity: 0;
+  }
+}
+/* src/pages/Cart.css */
+
+/* تخصيص مدخل الكمية اليدوي */
+.qty-value-input {
+  background-color: #f1f5f9; /* نفس لون الخلفية الرمادي */
+  color: #001f3f;
+  width: 44px; /* أعرض قليلاً لسهولة الكتابة والتعديل */
+  height: 34px;
+  border: none;
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+  border-radius: 8px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.qty-value-input:focus {
+  background-color: #ffffff;
+  border: 1.5px solid #001f3f; /* يظهر له حد أسود عند الكتابة */
+}
+
+/* إخفاء أسهم الزيادة والنقصان الافتراضية البشعة للمتصفح داخل حقل الأرقام */
+.qty-value-input::-webkit-outer-spin-button,
+.qty-value-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.qty-value-input {
+  -moz-appearance: textfield; /* لمتصفح فايرفوكس */
+}

@@ -1,0 +1,198 @@
+/* src/pages/ProductDetails.css */
+
+.details-container {
+  padding: 0 20px 20px;
+}
+
+/* تخطيط الموبايل الافتراضي (تحت بعض) */
+.details-split-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* سلايدر الصور للموبايل بنسبة 4/5 المتناسقة */
+.product-slider-wrapper {
+  position: relative;
+  background-color: #f8fafc;
+  border-radius: 16px;
+  aspect-ratio: 4 / 5; /* النسبة الذهبية لعرض البضائع */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  margin-bottom: 15px;
+}
+
+.product-slider-wrapper img {
+  width: 100%;
+  height: 100%;
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* نقاط السلايدر التفاعلية */
+.slider-dots {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.6);
+  padding: 6px 12px;
+  border-radius: 20px;
+  backdrop-filter: blur(4px);
+  z-index: 10;
+}
+.details-info-section {
+  padding: 0px 15px;
+}
+
+.slider-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #cbd5e1;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.slider-dot.active {
+  background-color: #ff6b00;
+  transform: scale(1.2);
+}
+
+.details-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.details-title-box h2 {
+  font-size: 22px;
+  font-weight: 800;
+  color: #001f3f;
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+
+.details-title-box span {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: bold;
+}
+
+.details-price {
+  font-size: 24px;
+  font-weight: 900;
+  color: #ff6b00;
+}
+
+/* إخفاء أزرار الديسكتوب على الجوال */
+.details-desktop-action-buttons {
+  display: none;
+}
+
+/* شريط الأزرار السفلي الثابت للجوال */
+.details-fixed-bottom-bar.mobile-only {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px; /* عرض الموبايل الملموم */
+  background-color: white;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 15px;
+  padding: 15px 20px;
+  border-top: 1px solid #e2e8f0;
+  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.03);
+  z-index: 200;
+}
+
+.btn-add-to-cart-outline {
+  background-color: white;
+  border: 1.5px solid #001f3f;
+  color: #001f3f;
+  border-radius: 10px;
+  padding: 12px;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.3s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-add-to-cart-outline:hover {
+  background-color: #f1f5f9;
+}
+
+.btn-buy-now-solid {
+  background: linear-gradient(90deg, #ff6b00 0%, #ff8c3a 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(255, 107, 0, 0.2);
+  transition: 0.3s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-buy-now-solid:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(255, 107, 0, 0.3);
+}
+
+/* ======================================================
+   💻 شاشات اللابتوب والكمبيوتر (Desktop Product Details)
+   ====================================================== */
+@media (min-width: 768px) {
+  .details-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0;
+  }
+
+  /* تقسيم الشاشة: يمين صور السلعة، ويسار البيانات بالكامل */
+  .details-split-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* مساحة متساوية ومريحة جداً */
+    gap: 50px;
+    align-items: start;
+  }
+
+  /* تحديد وعرض السلايدر لمنع تمدد الصورة المشوه */
+  .product-slider-wrapper {
+    aspect-ratio: 4 / 5;
+    max-width: 450px; /* حجم ملموم ومثالي للابتوب */
+    margin: 0 auto;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.03);
+  }
+
+  /* إخفاء بار الموبايل السفلي الطائر تماماً على اللابتوب */
+  .details-fixed-bottom-bar.mobile-only {
+    display: none !important;
+  }
+
+  /* إظهار وتنسيق الأزرار لتكون ملمومة تحت التفاصيل باليسار */
+  .details-desktop-action-buttons {
+    display: grid !important;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 15px;
+    margin-top: 35px;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 25px;
+  }
+}

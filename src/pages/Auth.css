@@ -1,0 +1,239 @@
+/* src/pages/Auth.css */
+
+/* خلفية متدرجة أنيقة ومريحة للعين */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f4f6f9 0%, #e9ecef 100%);
+  padding: 20px;
+}
+
+/* بطاقة تسجيل الدخول الحديثة */
+.auth-card {
+  background: #ffffff;
+  padding: 45px 35px;
+  border-radius: 16px; /* زوايا منحنية وناعمة */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04); /* ظل خفيف جداً وعصري */
+  width: 100%;
+  max-width: 420px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* خط الإشعاع العلوي بالأورنج المميز */
+.auth-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #ff6b00 0%, #ff8c3a 100%);
+}
+
+/* ترويسة النموذج */
+.auth-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.auth-logo {
+  font-size: 35px;
+  margin-bottom: 8px;
+  display: inline-block;
+}
+
+.auth-header h2 {
+  color: #001f3f; /* كحلي داكن وفخم */
+  font-size: 24px;
+  font-weight: 700;
+  margin-top: 5px;
+}
+
+.auth-header p {
+  color: #888888;
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+/* الحقول والمدخلات */
+.form-group {
+  margin-bottom: 22px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* غلاف الحقل لإضافة أيقونة بداخله */
+.input-wrapper {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+  font-size: 16px;
+  pointer-events: none;
+  transition: 0.3s;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 13px 40px 13px 16px; /* مسافة إضافية من اليمين للأيقونة */
+  border: 1px solid #e0e0e0;
+  border-radius: 10px; /* زوايا منحنية للمدخلات */
+  font-size: 15px;
+  background-color: #fafafa;
+  outline: none;
+  transition: all 0.3s ease;
+  color: #333;
+}
+
+/* حركة تغيير اللون عند الكتابة */
+.form-group input:focus {
+  border-color: #ff6b00;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(255, 107, 0, 0.12); /* توهج برتقالي ناعم */
+}
+
+/* تغيير لون الأيقونة عند فوكس الحقل */
+.form-group input:focus + .input-icon {
+  color: #ff6b00;
+}
+
+/* الزر الأساسي (أورنج متدرج مع تأثير ارتدادي عند اللمس) */
+.auth-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(90deg, #ff6b00 0%, #ff8c3a 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(255, 107, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.auth-btn:hover {
+  transform: translateY(-1px); /* يرتفع للأعلى قليلاً عند التمرير */
+  box-shadow: 0 6px 20px rgba(255, 107, 0, 0.3);
+}
+
+.auth-btn:active {
+  transform: translateY(1px); /* ينضغط للأسفل عند النقر */
+}
+
+/* رسائل الخطأ الأنيقة وبحد أحمر جانبي */
+.error-message {
+  background-color: #fff5f5;
+  border-right: 4px solid #f56565;
+  color: #c53030;
+  padding: 12px 15px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  text-align: right;
+}
+
+/* روابط الانتقال */
+.auth-link {
+  text-align: center;
+  margin-top: 25px;
+  font-size: 13px;
+  color: #666;
+}
+
+.auth-link a {
+  color: #ff6b00;
+  font-weight: bold;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.auth-link a:hover {
+  color: #ff8c3a;
+  text-decoration: underline;
+}
+/* src/pages/Auth.css */
+
+/* نافذة منبثقة مخصصة وفخمة لنسيان الباسوورد (Forgot Password Modal) */
+.auth-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(15, 23, 42, 0.3); /* تعتيم كحلي ناعم */
+  backdrop-filter: blur(5px); /* تأثير بلوري عصري */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.auth-modal-card {
+  background: white;
+  padding: 35px 30px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+  border-top: 5px solid #ff6b00; /* خط برتقالي دافئ */
+  position: relative;
+  animation: scaleUp 0.2s ease-out;
+}
+
+.auth-modal-card h3 {
+  color: #001f3f;
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.auth-modal-card p {
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 22px;
+  text-align: center;
+}
+
+.auth-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 25px;
+}
+
+/* أزرار النافذة المنبثقة للدخول */
+.auth-modal-card .modal-btn {
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  transition: 0.2s;
+}
+
+.auth-modal-card .modal-btn-cancel {
+  background-color: #f1f5f9;
+  color: #475569;
+}
+.auth-modal-card .modal-btn-cancel:hover {
+  background-color: #e2e8f0;
+}

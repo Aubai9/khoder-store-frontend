@@ -1,0 +1,100 @@
+/* src/pages/admin/Orders.css */
+
+/* كرت تفاصيل الطلبية الفخم */
+.order-admin-card {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  margin-bottom: 25px;
+  overflow: hidden;
+  animation: cardPopIn 0.3s ease-out;
+}
+
+.order-admin-header {
+  background-color: #f8fafc;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.order-admin-header h3 {
+  font-size: 15px;
+  color: #001f3f;
+}
+
+.order-admin-body {
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* تقسيم المعلومات على عمودين */
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .order-admin-body {
+    grid-template-columns: 1fr; /* عمود واحد في الجوال */
+  }
+}
+
+/* معلومات العميل والمتجر والشحن */
+.client-info-box h4,
+.order-items-box h4 {
+  font-size: 14px;
+  color: #001f3f;
+  margin-bottom: 12px;
+  border-right: 3px solid #ff6b00;
+  padding-right: 8px;
+}
+
+.client-info-box p {
+  font-size: 13.5px;
+  color: #475569;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* جدول المنتجات داخل الطلبية */
+.order-products-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.order-products-table th {
+  background-color: #f1f5f9;
+  font-size: 12px;
+  padding: 8px;
+  text-align: right;
+  color: #001f3f;
+}
+
+.order-products-table td {
+  padding: 8px;
+  font-size: 13px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
+}
+
+/* زر تجهيز وشحن الطلبية الأخضر الفخم */
+.ship-btn {
+  background-color: #22c55e;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ship-btn:hover {
+  background-color: #16a34a;
+}

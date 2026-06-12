@@ -1,0 +1,836 @@
+/* src/pages/admin/Inventory.css */
+
+/* تخطيط الصفحة الكلي */
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f8fafc;
+  direction: rtl;
+}
+
+/* 1. الشريط الجانبي (Sidebar) الكحلي الداكن */
+.admin-sidebar {
+  width: 260px;
+  background-color: #001f3f;
+  color: #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 30px 20px;
+  box-shadow: -4px 0 15px rgba(0, 0, 0, 0.05);
+
+  /* التعديل السحري هنا 👇 */
+  height: 100vh; /* يأخذ طول الشاشة بالملي */
+  position: sticky; /* يبقى ثابتاً عند النزول بالصفحة */
+  top: 0;
+}
+
+.sidebar-header {
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 20px;
+  margin-bottom: 25px;
+}
+
+.sidebar-header h2 {
+  font-size: 20px;
+  color: #ff6b00;
+}
+
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 20px; /* مسافة بسيطة بينها وبين الفوتور */
+
+  /* التعديل هنا لكي لا تدفع الفوتور للأسفل 👇 */
+  overflow-y: auto;
+  scrollbar-width: none; /* إخفاء السكرول في فايرفوكس */
+}
+
+/* إخفاء شريط السكرول الداخلي للقائمة في كروم وسفاري */
+.sidebar-menu::-webkit-scrollbar {
+  display: none;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 15px;
+  border-radius: 8px;
+  color: #94a3b8 !important;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 8px;
+  transition: 0.3s;
+}
+
+.menu-item.active {
+  background-color: rgba(255, 107, 0, 0.15);
+  color: #ff6b00;
+  border-right: 4px solid #ff6b00;
+}
+
+.menu-item.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* 2. منطقة محتوى المخزون (يسار الصفحة) */
+.inventory-content {
+  flex-grow: 1;
+  padding: 40px;
+  overflow-y: auto;
+}
+
+.inventory-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.inventory-header h1 {
+  color: #001f3f;
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.add-product-btn {
+  background-color: #e05e00;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.add-product-btn:hover {
+  background-color: #a16207;
+}
+
+/* جدول المنتجات الأنيق */
+.table-container {
+  background: white;
+  overflow-x: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  border: 1px solid #e2e8f0;
+}
+
+.inventory-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: right;
+}
+
+.inventory-table th {
+  background-color: #f1f5f9;
+  color: #001f3f;
+  padding: 16px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.inventory-table td {
+  display: felx;
+  flex-direction: column;
+  justify-content: center;
+  align-items: space-evenly;
+  padding: 16px 10px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 14px;
+  color: #334155;
+}
+
+/* 🌟 تأثير الـ Zebra Striping: تلوين الأسطر الزوجية بلون رمادي سحابي ناعم ومريح للعين 🌟 */
+.inventory-table tbody tr:nth-child(even) {
+  background-color: #eceef1;
+}
+
+/* تأثير مرور الماوس (Hover) التفاعلي والموحد لجميع أسطر الجدول ليعطيك إحساساً رائعاً بالحركة */
+.inventory-table tbody tr:hover,
+.clickable-row:hover {
+  background-color: #f1f5f9 !important; /* تظليل تفاعلي ناعم عند الهوفر */
+  transform: scale(1.002); /* تمدد طفيف جداً لإعطاء إحساس بالعمق */
+}
+
+.stock-badge {
+  display: inline-block;
+  width: fit-content;
+  padding: 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.stock-ok {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+.stock-warning {
+  background-color: #fef9c3;
+  color: #a16207;
+}
+.stock-out {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.action-btn {
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 13px;
+  transition: 0.3s;
+  margin-left: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-edit {
+  background-color: #ff6b00;
+  color: white;
+  margin-bottom: 5px;
+  max-width: 50px;
+}
+.btn-edit:hover {
+  background-color: #e05e00;
+}
+.btn-delete {
+  background-color: #ef4444;
+  color: white;
+}
+.btn-delete:hover {
+  background-color: #dc2626;
+}
+
+/* ======================================================
+   ✨ تحسين وتنسيق النافذة المنبثقة الفخمة (Modal CSS)
+   ====================================================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(15, 23, 42, 0.3); /* تعتيم كحلي ناعم */
+  backdrop-filter: blur(5px); /* تأثير بلوري خلفي */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 250;
+  padding: 20px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal-content {
+  background: #ffffff;
+  padding: 35px;
+  border-radius: 20px; /* زوايا منحنية فخمة دائرية */
+  width: 100%;
+  max-width: 650px; /* عرض أوسع ليسمح بالتقسيم الجانبي */
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08); /* ظل ناعم للغاية */
+  border-top: 6px solid #e05e00; /* حد علوي أخضر ناعم */
+  position: relative;
+  max-height: 90vh; /* لضمان عدم الخروج من شاشات الموبايل أو الكمبيوتر الصغيرة */
+  overflow-y: auto; /* سكرول ناعم داخلي للاحتياط */
+  animation: scaleUp 0.2s ease-out;
+}
+
+/* إخفاء وتنسيق السكرول بار الداخلي للمودال */
+.modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+.modal-content::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 10px;
+}
+
+.modal-header {
+  color: #001f3f;
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+/* تقسيم الحقول لعمودين متناسقين لتقليل طول الصفحة للنصف */
+.modal-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 576px) {
+  .modal-grid-2 {
+    grid-template-columns: 1fr; /* عمود واحد في شاشات الجوال */
+    gap: 15px;
+  }
+}
+
+.modal-content .form-group {
+  margin-bottom: 20px;
+}
+
+.modal-content .form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #475569;
+}
+
+/* تنعيم المدخلات والحدود وتوهجها بالأورنج عند الكتابة */
+.modal-content .form-group input,
+.modal-content .form-group select,
+.modal-content .form-group textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px; /* زوايا منحنية فخمة للمدخلات */
+  font-size: 14px;
+  background-color: #f8fafc;
+  outline: none;
+  transition: all 0.25s ease;
+  color: #1e293b;
+}
+
+.modal-content .form-group input:focus,
+.modal-content .form-group select:focus,
+.modal-content .form-group textarea:focus {
+  border-color: #ff6b00; /* توهج برتقالي ناعم عند الكتابة */
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(255, 107, 0, 0.12);
+}
+
+/* حقل رفع الصورة الجديد */
+.modal-image-upload {
+  gap: 15px;
+  background: #f8fafc;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1.5px dashed #cbd5e1;
+}
+
+/* تصميم أزرار المودال الفخمة بالأسفل */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 30px;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 20px;
+}
+
+.modal-btn {
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  transition: 0.2s;
+}
+
+.modal-btn-cancel {
+  background-color: #f1f5f9;
+  color: #475569;
+}
+.modal-btn-cancel:hover {
+  background-color: #e2e8f0;
+}
+
+.modal-btn-save {
+  background-color: #ff6b00;
+  color: white;
+  box-shadow: 0 4px 12px rgba(197, 159, 34, 0.2);
+}
+.modal-btn-save:hover {
+  background-color: #a16207;
+  transform: translateY(-1px);
+}
+
+/* ======================================================
+   ⚠️ نافذة تأكيد الحذف المخصصة الفخمة
+   ====================================================== */
+.confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(15, 23, 42, 0.3);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 300;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.confirm-card {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border-top: 5px solid #ef4444;
+  animation: scaleUp 0.2s ease-out;
+}
+
+.confirm-icon {
+  font-size: 45px;
+  color: #ef4444;
+  margin-bottom: 15px;
+  display: inline-block;
+}
+
+.confirm-card h3 {
+  color: #001f3f;
+  font-size: 18px;
+  margin-bottom: 10px;
+  font-weight: 800;
+}
+
+.confirm-card p {
+  color: #64748b;
+  font-size: 14px;
+  margin-bottom: 25px;
+  line-height: 1.6;
+}
+
+.confirm-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.confirm-btn {
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  transition: 0.2s;
+}
+
+.btn-cancel {
+  background-color: #f1f5f9;
+  color: #475569;
+}
+
+.btn-cancel:hover {
+  background-color: #e2e8f0;
+}
+
+.btn-danger-confirm {
+  background-color: #ef4444;
+  color: white;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+.btn-danger-confirm:hover {
+  background-color: #dc2626;
+  transform: translateY(-1px);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleUp {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.image-preview {
+  width: 100%;
+  max-width: 100px;
+  border-radius: 10px;
+  margin-top: 10px;
+  object-fit: cover;
+}
+/* ======================================================
+   📱 جعل لوحة الإدارة متجاوبة بالكامل مع الموبايل (Admin Mobile Responsive)
+   ====================================================== */
+/* src/pages/admin/Inventory.css */
+
+/* (أضف هذه التنسيقات بالقسم العام لتعمل على اللابتوب بشكل ثابت) */
+.sidebar-footer-wrapper {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 15px;
+}
+
+.sidebar-footer-desktop {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.footer-btn-store,
+.footer-btn-logout {
+  font-weight: bold;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.footer-btn-store {
+  color: #38bdf8;
+}
+.footer-btn-store:hover {
+  color: #0284c7;
+}
+.footer-btn-logout {
+  color: #ff4d4d;
+}
+.footer-btn-logout:hover {
+  color: #dc2626;
+}
+
+/* إخفاء القائمة المنسدلة للموبايل بشكل افتراضي على اللابتوب */
+.sidebar-footer-mobile {
+  display: none;
+  position: relative;
+}
+
+/* ======================================================
+   📱 تحديث وضع الموبايل والتابلت (أقل من 768px)
+   ====================================================== */
+@media (max-width: 768px) {
+  .sidebar-menu {
+    display: none;
+  }
+  .admin-layout {
+    flex-direction: column;
+  }
+
+  .admin-sidebar {
+    width: 100%;
+    padding: 15px 20px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height: auto;
+    position: relative; /* ضروري لكي تفتح القائمة المنسدلة بشكل منسجم */
+  }
+
+  .sidebar-header {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
+  /* إخفاء نسخة الأزرار الثابتة للابتوب على الجوال */
+  .sidebar-footer-desktop {
+    display: none !important;
+  }
+
+  .sidebar-footer-wrapper {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  /* إظهار وتفعيل زر القائمة للموبايل */
+  .sidebar-footer-mobile {
+    display: block !important;
+  }
+
+  .mobile-menu-trigger {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border-radius: 8px;
+    transition: 0.3s;
+  }
+
+  .mobile-menu-trigger:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  /* تصميم بطاقة القائمة المنسدلة (Dropdown Menu) الفخمة */
+  /* (حدث كلاس القائمة المنسدلة ليتسع لجميع العناصر الجديدة) */
+  .admin-dropdown-menu {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+    padding: 8px;
+    width: 200px; /* تم تكبير العرض ليتسع للنصوص البرمجية بوضوح */
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    z-index: 300;
+    animation: dropdownSlide 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  /* تنسيق الخيار النشط حالياً (المخزون) داخل المنسدلة بالأورنج الفخم */
+  .dropdown-item.active-item {
+    background-color: rgba(255, 107, 0, 0.08);
+    color: #ff6b00;
+    border-right: 3px solid #ff6b00;
+  }
+
+  /* تنسيق الخيارات المعطلة مؤقتاً كـ رمادي هادئ */
+  .dropdown-item.disabled-item {
+    color: #94a3b8;
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  /* تنسيق الخط الفاصل الناعم */
+  .dropdown-divider {
+    height: 1px;
+    background-color: #f1f5f9;
+    margin: 4px 0;
+  }
+
+  /* أنيميشن انزلاق القائمة لنعومة الحركة */
+  @keyframes dropdownSlide {
+    from {
+      opacity: 0;
+      transform: translateY(-10px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* تصميم الخيارات الداخلية للدروب داون */
+  .dropdown-item {
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .dropdown-item.item-store {
+    color: #001f3f;
+  }
+  .dropdown-item.item-store:hover {
+    background-color: #f0f9ff;
+    color: #0284c7;
+  }
+
+  .dropdown-item.item-logout {
+    color: #ef4444;
+  }
+  .dropdown-item.item-logout:hover {
+    background-color: #fef2f2;
+    color: #dc2626;
+  }
+
+  /* منطقة محتوى جدول المخزن على الجوال */
+  .inventory-content {
+    padding: 20px;
+  }
+
+  .inventory-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .add-product-btn {
+    justify-content: center;
+  }
+
+  .table-container {
+    overflow-x: auto;
+    border-radius: 8px;
+  }
+
+  .inventory-table {
+    min-width: 750px;
+  }
+
+  .modal-content {
+    padding: 20px;
+  }
+}
+/* غطاء شفاف خلف القائمة لإغلاقها عند النقر في أي مكان فارغ بالشاشة */
+.dropdown-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: transparent; /* شفاف تماماً وغير مرئي */
+  z-index: 290; /* تحت القائمة المنسدلة مباشرة (التي هي 300) وفوق كل شيء آخر */
+}
+/* تنسيق معرض الصور المتعددة في المودال */
+.multi-image-preview-container {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 5px;
+}
+
+.multi-image-preview-container::-webkit-scrollbar {
+  height: 6px;
+}
+.multi-image-preview-container::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+.multi-image-preview-container img {
+  width: 65px;
+  height: 65px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 2px solid #e2e8f0;
+  flex-shrink: 0;
+}
+/* src/pages/admin/Inventory.css */
+
+/* حاوية الصورة المصغرة في المودال */
+.preview-img-wrapper {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* زر إزالة صورة محددة (❌) */
+.remove-single-img-btn {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+  transition: 0.2s;
+  z-index: 10;
+}
+
+.remove-single-img-btn:hover {
+  transform: scale(1.15);
+  background-color: #dc2626;
+}
+/* ======================================================
+   📘 تصميم دفتر الصندوق وسجل العميل (Ledger Modal)
+   ====================================================== */
+.ledger-history-box {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 25px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.ledger-history-box h4 {
+  color: #22c55e;
+  font-size: 14px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-bottom: 1px dashed #cbd5e1;
+  padding-bottom: 8px;
+}
+
+.ledger-history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.ledger-history-item:last-child {
+  border-bottom: none;
+}
+
+.ledger-item-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ledger-item-name {
+  font-weight: bold;
+  color: #001f3f;
+  font-size: 13px;
+}
+
+.ledger-item-type {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.ledger-item-amount {
+  font-weight: 900;
+  font-size: 14px;
+}
+
+.amount-purchase {
+  color: #001f3f;
+} /* كحلي للمشتريات */
+.amount-payment {
+  color: #22c55e;
+} /* أخضر للدفعات */
+
+/* جعل صفوف جدول العملاء قابلة للنقر */
+.clickable-row {
+  cursor: pointer;
+  transition: 0.2s;
+}
+.clickable-row:hover {
+  background-color: #f1f5f9 !important;
+  transform: scale(1.005);
+}

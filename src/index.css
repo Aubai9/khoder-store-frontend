@@ -1,0 +1,29 @@
+/* src/index.css */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* فرض خط كايرو على كل شيء في الموقع */
+  font-family: "Cairo", sans-serif !important;
+}
+
+body {
+  background-color: #f9f9f9;
+  color: #0f172a; /* لون نصوص داكن لسهولة القراءة */
+  direction: rtl;
+  text-align: right;
+  /* القاعدة: لا يوجد خط أنحف من 400 (Regular) أبداً */
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased; /* لجعل الخط يظهر بنعومة فائقة على الشاشات */
+}
+
+/* القاعدة: النصوص الطويلة والوصف لا تتجاوز 75 حرفاً لراحة العين */
+p,
+.long-description {
+  max-width: 75ch; /* وحدة ch تعني عرض "حرف" واحد، هذا السطر يطبق قاعدتك حرفياً! */
+  line-height: 1.7; /* تباعد مريح بين الأسطر */
+}
+a {
+  text-align: none;
+  color: inherit;
+}
