@@ -20,9 +20,15 @@ import {
 } from "react-icons/fi";
 
 function Cart() {
+  const { user, token } = useContext(AuthContext); // أضفنا token هنا
+  useEffect(() => {
+    if (!token) {
+      navigate("/login");
+    }
+  }, [token, navigate]);
   const { cart, updateQuantity, removeFromCart, clearCart, cartCount } =
     useContext(CartContext);
-  const { user } = useContext(AuthContext);
+
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
   const [error, setError] = useState("");

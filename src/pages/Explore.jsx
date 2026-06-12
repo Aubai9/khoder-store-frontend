@@ -22,7 +22,7 @@ import "./Home.css"; // للتنسيق الهيكلي
 import "./Explore.css"; // لتنسيقات البحث والفلترة
 
 function Explore() {
-  const { user } = useContext(AuthContext);
+  const { user, token } = useContext(AuthContext); // أضفنا token هنا
   const { addToCart, cartCount, toast, cartPulse } = useContext(CartContext);
   const { toggleFavorite, isFavorite } = useContext(FavoritesContext);
   const navigate = useNavigate();
@@ -37,6 +37,9 @@ function Explore() {
   const [selectedSection, setSelectedSection] = useState("ALL"); // ALL, رجالي, نسائي, ولادي
 
   useEffect(() => {
+    if (!token) {
+      navigate("/login");
+    }
     const fetchData = async () => {
       try {
         const prodRes = await API.get("/products");
@@ -51,7 +54,7 @@ function Explore() {
       }
     };
     fetchData();
-  }, []);
+  }, [token, navigate]);
 
   // --------------------------------------------------
   // 1. دالة ذكية لفصل الصور بأمان وتفادي مشكلة الفواصل داخل روابط Cloudinary

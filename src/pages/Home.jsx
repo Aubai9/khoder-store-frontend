@@ -34,12 +34,15 @@ function Home() {
   });
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
-  const { user } = useContext(AuthContext);
+  const { user, logoutUser, token } = useContext(AuthContext); // أضفنا token هنا
   const { addToCart, cartCount, toast, cartPulse } = useContext(CartContext);
   const { toggleFavorite, isFavorite } = useContext(FavoritesContext);
   const [activeFilter, setActiveFilter] = useState("الكل");
 
   useEffect(() => {
+    if (!token) {
+      navigate("/login");
+    }
     const fetchProducts = async () => {
       try {
         const settingsRes = await API.get("/admin/settings");
@@ -51,7 +54,7 @@ function Home() {
       }
     };
     fetchProducts();
-  }, []);
+  }, [token, navigate]);
 
   // --------------------------------------------------
   // محرك الفلترة الفوري للأقسام الدائرية
