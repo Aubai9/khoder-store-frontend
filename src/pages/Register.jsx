@@ -4,13 +4,12 @@ import { Link, useNavigate } from "react-router-dom";
 import API from "../services/api";
 import "./Auth.css";
 
-// الاستيراد الصحيح للأيقونات بدون أي خطأ
 import {
   FiUser,
   FiLock,
   FiSmartphone,
   FiShoppingBag,
-  FiPhone,
+  FiAlertTriangle,
 } from "react-icons/fi";
 import { MdOutlineStorefront } from "react-icons/md";
 
@@ -19,26 +18,34 @@ function Register() {
   const [username, setUsername] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+
+  // 🌟 استخدام الإشعار العائم المطور بدلاً من النص العادي 🌟
+  const [toastError, setToastError] = useState("");
   const navigate = useNavigate();
 
+  const triggerErrorToast = (msg) => {
+    setToastError(msg);
+    setTimeout(() => setToastError(""), 8000); // 🌟 زدنا الوقت لـ 8 ثوانٍ كاملة ليقرأها براحته 🌟
+  };
+
   const handleSubmit = async (e) => {
-    // فحص قوة الباسوورد بالفرونت إند قبل إرساله للسيرفر
+    e.preventDefault();
+    setToastError("");
+
+    // فحص قوة الباسوورد بالفرونت إند قبل الإرسال
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
     if (!passwordRegex.test(password)) {
-      setError(
+      triggerErrorToast(
         "كلمة المرور ضعيفة! يجب أن تكون 8 خانات على الأقل وتحتوي على حرف كبير، حرف صغير، ورقم.",
       );
       return;
     }
-    e.preventDefault();
-    setError("");
 
     try {
       await API.post("/users/register", { name, username, whatsapp, password });
       navigate("/login");
     } catch (err) {
-      setError(
+      triggerErrorToast(
         err.response?.data?.error || "فشل إنشاء الحساب، يرجى المحاولة لاحقاً",
       );
     }
@@ -48,7 +55,6 @@ function Register() {
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-header">
-          {/* أيقونة الشعار */}
           <FiShoppingBag
             size={35}
             color="#001f3f"
@@ -58,37 +64,37 @@ function Register() {
           <p>أدخل بيانات متجرك للبدء في عرض منتجاتك وتلقي الطلبات</p>
         </div>
 
-        {error && <div className="error-message">{error}</div>}
-
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label> الاسم </label>
+            <label>اسم المدير / الشخص المسؤول</label>
             <div className="input-wrapper">
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
+                placeholder="مثال: خضر مادي"
               />
               <FiUser className="input-icon" size={18} />
             </div>
           </div>
 
           <div className="form-group">
-            <label> اسم المتجر</label>
+            <label>اسم المتجر (يُستخدم لتسجيل الدخول)</label>
             <div className="input-wrapper">
               <input
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
+                placeholder="مثال: متجر خضر"
               />
               <MdOutlineStorefront className="input-icon" size={18} />
             </div>
           </div>
 
           <div className="form-group">
-            <label> الرقم </label>
+            <label>رقم الواتساب (للتواصل وإرسال الطلبات)</label>
             <div className="input-wrapper">
               <input
                 type="tel"
@@ -98,7 +104,7 @@ function Register() {
                 placeholder="مثال: 09xxxxxxxx"
                 dir="ltr"
               />
-              <FiPhone className="input-icon" size={18} />
+              <FiSmartphone className="input-icon" size={18} />
             </div>
           </div>
 
@@ -114,7 +120,6 @@ function Register() {
               />
               <FiLock className="input-icon" size={18} />
             </div>
-            {/* توضيح شروط الباسوورد للزبون */}
             <span
               style={{
                 fontSize: "11px",
@@ -136,6 +141,13 @@ function Register() {
           لديك متجر بالفعل؟ <Link to="/login">تسجيل الدخول باسم المتجر</Link>
         </p>
       </div>
+
+      {/* 🌟 الإشعار الأحمر الفخم (يظهر لـ 8 ثوانٍ) 🌟 */}
+      {toastError && (
+        <div className="pwa-toast pwa-toast-error">
+          <FiAlertTriangle size={18} /> {toastError}
+        </div>
+      )}
     </div>
   );
 }
