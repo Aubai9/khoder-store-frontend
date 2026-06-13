@@ -313,7 +313,7 @@ function Customers() {
       {/* محتوى الشاشة الأيسر */}
       <main className="inventory-content">
         <div className="inventory-header">
-          <h1>إدارة العملاء والديون 👥</h1>
+          <h1>إدارة العملاء والديون </h1>
           <button
             className="add-product-btn"
             onClick={() => setShowAddModal(true)}
