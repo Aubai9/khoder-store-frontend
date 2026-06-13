@@ -33,6 +33,9 @@ function Customers() {
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [paymentAmount, setPaymentAmount] = useState("");
   const [paymentNotes, setPaymentNotes] = useState("");
+  const [transactionType, setTransactionType] = useState("PAYMENT"); // 🌟 الحالة الافتراضية: سداد دين
+  const [submittingPayment, setSubmittingPayment] = useState(false);
+  const [paymentNotes, setPaymentNotes] = useState("");
   const [submittingPayment, setSubmittingPayment] = useState(false);
 
   // حالات إضافة عميل جديد
@@ -84,11 +87,13 @@ function Customers() {
         customerId: selectedCustomer.id,
         amount: paymentAmount,
         notes: paymentNotes,
+        type: transactionType,
       });
-      triggerSuccess("تم تسجيل الدفعة بنجاح وخصمها من الرصيد! ✅");
+      triggerSuccess("تم تسجيل الدفعة بنجاح وخصمها من الرصيد! ");
       setSelectedCustomer(null);
       setPaymentAmount("");
       setPaymentNotes("");
+      setTransactionType("PAYMENT");
       fetchCustomers();
     } catch (error) {
       triggerError(error.response?.data?.error || "فشل تسجيل الدفعة");
@@ -134,7 +139,7 @@ function Customers() {
         customerId: selectedCustomer.id,
         newPassword: newPasswordState,
       });
-      triggerSuccess("تم تحديث كلمة المرور للعميل بنجاح! 🔐✅");
+      triggerSuccess("تم تحديث كلمة المرور للعميل بنجاح! ");
       setNewPasswordState("");
       setSelectedCustomer(null);
     } catch (error) {
@@ -293,7 +298,7 @@ function Customers() {
 
       <main className="inventory-content">
         <div className="inventory-header">
-          <h1>إدارة العملاء والديون 👥</h1>
+          <h1>إدارة العملاء والديون </h1>
           <button
             className="add-product-btn"
             onClick={() => setShowAddModal(true)}
@@ -480,18 +485,27 @@ function Customers() {
             <form onSubmit={handlePaymentSubmit}>
               <div className="form-group">
                 <label>نوع العملية</label>
+                {/* 🌟 إزالة الـ disabled وتفعيل الخيارات بحرية 🌟 */}
                 <select
-                  disabled
+                  value={transactionType}
+                  onChange={(e) => setTransactionType(e.target.value)}
                   style={{
                     width: "100%",
                     padding: "12px",
                     borderRadius: "10px",
-                    border: "1px solid #ddd",
+                    border: "1.5px solid #e2e8f0",
                     background: "#f8fafc",
                     fontWeight: "bold",
+                    color:
+                      transactionType === "PAYMENT" ? "#15803d" : "#b91c1c", // يتلون أخضر للسداد وأحمر للدين
+                    outline: "none",
+                    cursor: "pointer",
                   }}
                 >
-                  <option>دفع من العميل (سداد دين)</option>
+                  <option value="PAYMENT">
+                    دفع من العميل (تنزيل من الدين) ⬇️
+                  </option>
+                  <option value="DEBT">إضافة دين (تسجيل على الحساب) ⬆️</option>
                 </select>
               </div>
 
@@ -539,7 +553,7 @@ function Customers() {
                   className="modal-btn modal-btn-save"
                   style={{ backgroundColor: "#22c55e", color: "white" }}
                 >
-                  {submittingPayment ? "جاري التسجيل..." : "تسجيل العملية ✅"}
+                  {submittingPayment ? "جاري التسجيل..." : "تسجيل العملية "}
                 </button>
               </div>
             </form>
@@ -587,7 +601,7 @@ function Customers() {
                     margin: 0,
                   }}
                 >
-                  {updatingPassword ? "جاري التحديث..." : "تحديث الباسوورد"}
+                  {updatingPassword ? "جاري التحديث..." : "تحديث "}
                 </button>
               </div>
             </div>
@@ -680,9 +694,7 @@ function Customers() {
                   boxShadow: "0 4px 12px rgba(255, 107, 0, 0.2)",
                 }}
               >
-                {submittingCustomer
-                  ? "جاري الحفظ..."
-                  : "تسجيل العميل الجديد ✅"}
+                {submittingCustomer ? "جاري الحفظ..." : "تسجيل العميل الجديد "}
               </button>
             </div>
           </form>
