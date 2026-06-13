@@ -103,7 +103,7 @@ function Customers() {
         notes: paymentNotes,
         type: transactionType, // إرسال نوع العملية
       });
-      triggerSuccess("تم تسجيل العملية المحاسبية وتحديث رصيد العميل! ✅");
+      triggerSuccess("تم تسجيل العملية المحاسبية وتحديث رصيد العميل! ");
       setSelectedCustomer(null);
       setPaymentAmount("");
       setPaymentNotes("");
@@ -153,7 +153,7 @@ function Customers() {
         customerId: selectedCustomer.id,
         newPassword: newPasswordState,
       });
-      triggerSuccess("تم تحديث كلمة المرور للعميل بنجاح! 🔐✅");
+      triggerSuccess("تم تحديث كلمة المرور للعميل بنجاح! ");
       setNewPasswordState("");
       setSelectedCustomer(null);
     } catch (error) {
@@ -518,10 +518,8 @@ function Customers() {
                     cursor: "pointer",
                   }}
                 >
-                  <option value="PAYMENT">
-                    دفع من العميل (تنزيل من الدين) ⬇️
-                  </option>
-                  <option value="DEBT">إضافة دين (تسجيل على الحساب) ⬆️</option>
+                  <option value="PAYMENT">دفع من العميل</option>
+                  <option value="DEBT">إضافة دين </option>
                 </select>
               </div>
 
@@ -570,7 +568,7 @@ function Customers() {
                   className="modal-btn modal-btn-save"
                   style={{ backgroundColor: "#22c55e", color: "white" }}
                 >
-                  {submittingPayment ? "جاري التسجيل..." : "تسجيل العملية ✅"}
+                  {submittingPayment ? "جاري التسجيل..." : "تسجيل العملية "}
                 </button>
               </div>
             </form>
@@ -619,7 +617,7 @@ function Customers() {
                     margin: 0,
                   }}
                 >
-                  {updatingPassword ? "جاري التحديث..." : "تحديث الباسوورد"}
+                  {updatingPassword ? "جاري التحديث..." : "تحديث "}
                 </button>
               </div>
             </div>
@@ -703,9 +701,7 @@ function Customers() {
                   boxShadow: "0 4px 12px rgba(255, 107, 0, 0.2)",
                 }}
               >
-                {submittingCustomer
-                  ? "جاري الحفظ..."
-                  : "تسجيل العميل الجديد ✅"}
+                {submittingCustomer ? "جاري الحفظ..." : "تسجيل العميل الجديد "}
               </button>
             </div>
           </form>
