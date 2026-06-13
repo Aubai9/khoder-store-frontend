@@ -304,18 +304,18 @@ function Approvals() {
                             fontWeight: "bold",
                           }}
                         >
-                          💬 {req.whatsapp}
+                          {req.whatsapp}
                         </a>
                       </td>
                       <td>{joinDate}</td>
                       <td>
                         {req.approved ? (
                           <span className="stock-badge stock-ok">
-                            مقبول ومفعّل ✅
+                            مقبول ومفعّل
                           </span>
                         ) : (
                           <span className="stock-badge stock-warning">
-                            بانتظار الموافقة 🕒
+                            بانتظار الموافقة
                           </span>
                         )}
                       </td>
