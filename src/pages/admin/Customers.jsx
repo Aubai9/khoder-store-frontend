@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import API from "../../services/api";
 
+// استيراد كافة الأيقونات الموحدة والاحترافية
 import {
   FiGrid,
   FiBox,
@@ -16,8 +17,9 @@ import {
   FiClock,
   FiCheckCircle,
   FiAlertTriangle,
-  FiUser,
   FiSmartphone,
+  FiUser,
+  FiPlus,
 } from "react-icons/fi";
 import { MdOutlineStorefront } from "react-icons/md";
 
@@ -30,27 +32,25 @@ function Customers() {
   const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
 
+  // حالات نافذة دفتر العميل (Ledger)
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [paymentAmount, setPaymentAmount] = useState("");
   const [paymentNotes, setPaymentNotes] = useState("");
-  const [transactionType, setTransactionType] = useState("PAYMENT"); // 🌟 الحالة الافتراضية: سداد دين
-  const [submittingPayment, setSubmittingPayment] = useState(false);
-  const [paymentNotes, setPaymentNotes] = useState("");
+  const [transactionType, setTransactionType] = useState("PAYMENT"); // الحالة الافتراضية سداد
   const [submittingPayment, setSubmittingPayment] = useState(false);
 
-  // حالات إضافة عميل جديد
+  // حالات نافذة إضافة عميل جديد
   const [showAddModal, setShowAddModal] = useState(false);
   const [newCustomerName, setNewCustomerName] = useState("");
   const [newCustomerUsername, setNewCustomerUsername] = useState("");
   const [newCustomerWhatsapp, setNewCustomerWhatsapp] = useState("");
-
-  // 🌟 التعديل هنا: أضفنا حالة الباسوورد الجديد المفتوح 🌟
-  const [newCustomerPassword, setNewCustomerPassword] = useState("");
   const [submittingCustomer, setSubmittingCustomer] = useState(false);
 
+  // حالات تعيين باسوورد جديد للعميل
   const [newPasswordState, setNewPasswordState] = useState("");
   const [updatingPassword, setUpdatingPassword] = useState(false);
 
+  // حالات الإشعارات العائمة الفخمة (Toasts)
   const [toastSuccess, setToastSuccess] = useState("");
   const [toastError, setToastError] = useState("");
 
@@ -62,6 +62,19 @@ function Customers() {
   const triggerError = (msg) => {
     setToastError(msg);
     setTimeout(() => setToastError(""), 5000);
+  };
+
+  // دالة لتنظيف وتنسيق رقم الواتساب الدولي لسوريا تلقائياً [1]
+  const formatWhatsAppNumber = (phoneStr) => {
+    if (!phoneStr) return "";
+    let cleaned = phoneStr.replace(/\D/g, "");
+    if (cleaned.startsWith("00")) cleaned = cleaned.substring(2);
+    if (cleaned.startsWith("09") && cleaned.length === 10) {
+      cleaned = "963" + cleaned.substring(1);
+    } else if (cleaned.startsWith("9") && cleaned.length === 9) {
+      cleaned = "963" + cleaned;
+    }
+    return cleaned;
   };
 
   const fetchCustomers = async () => {
@@ -79,6 +92,7 @@ function Customers() {
     fetchCustomers();
   }, []);
 
+  // دالة تسجيل دفعة السداد أو إضافة دين
   const handlePaymentSubmit = async (e) => {
     e.preventDefault();
     setSubmittingPayment(true);
@@ -87,22 +101,22 @@ function Customers() {
         customerId: selectedCustomer.id,
         amount: paymentAmount,
         notes: paymentNotes,
-        type: transactionType,
+        type: transactionType, // إرسال نوع العملية
       });
-      triggerSuccess("تم تسجيل الدفعة بنجاح وخصمها من الرصيد! ");
+      triggerSuccess("تم تسجيل العملية المحاسبية وتحديث رصيد العميل! ✅");
       setSelectedCustomer(null);
       setPaymentAmount("");
       setPaymentNotes("");
       setTransactionType("PAYMENT");
       fetchCustomers();
     } catch (error) {
-      triggerError(error.response?.data?.error || "فشل تسجيل الدفعة");
+      triggerError(error.response?.data?.error || "فشل تسجيل العملية");
     } finally {
       setSubmittingPayment(false);
     }
   };
 
-  // 🌟 دالة تسجيل العميل الجديد 🌟
+  // دالة تسجيل عميل جديد
   const handleAddCustomerSubmit = async (e) => {
     e.preventDefault();
     setSubmittingCustomer(true);
@@ -111,17 +125,16 @@ function Customers() {
         name: newCustomerName,
         username: newCustomerUsername,
         whatsapp: newCustomerWhatsapp,
-        password: newCustomerPassword, // 🌟 نرسل الباسوورد الذي كتبه المدير هنا 🌟
+        password: "123",
       });
 
       triggerSuccess(
-        `تم تسجيل العميل بنجاح! الباسوورد الخاص به هو: ${newCustomerPassword} 🎉`,
+        `تم تسجيل العميل الجديد بنجاح! الباسوورد الافتراضي: 123 🎉`,
       );
       setShowAddModal(false);
       setNewCustomerName("");
       setNewCustomerUsername("");
       setNewCustomerWhatsapp("");
-      setNewCustomerPassword("");
       fetchCustomers();
     } catch (error) {
       triggerError(error.response?.data?.error || "فشل تسجيل العميل الجديد");
@@ -130,6 +143,7 @@ function Customers() {
     }
   };
 
+  // دالة تغيير باسوورد العميل
   const handleResetPasswordSubmit = async (e) => {
     e.preventDefault();
     if (!newPasswordState) return;
@@ -139,7 +153,7 @@ function Customers() {
         customerId: selectedCustomer.id,
         newPassword: newPasswordState,
       });
-      triggerSuccess("تم تحديث كلمة المرور للعميل بنجاح! ");
+      triggerSuccess("تم تحديث كلمة المرور للعميل بنجاح! 🔐✅");
       setNewPasswordState("");
       setSelectedCustomer(null);
     } catch (error) {
@@ -151,6 +165,7 @@ function Customers() {
 
   return (
     <div className="admin-layout">
+      {/* القائمة الجانبية */}
       <aside className="admin-sidebar">
         <div className="sidebar-header">
           <h2
@@ -283,7 +298,6 @@ function Customers() {
                     onClick={() => {
                       logoutUser();
                       navigate("/login");
-                      setShowDropdown(false);
                     }}
                     className="dropdown-item item-logout"
                   >
@@ -296,9 +310,10 @@ function Customers() {
         </div>
       </aside>
 
+      {/* محتوى الشاشة الأيسر */}
       <main className="inventory-content">
         <div className="inventory-header">
-          <h1>إدارة العملاء والديون </h1>
+          <h1>إدارة العملاء والديون 👥</h1>
           <button
             className="add-product-btn"
             onClick={() => setShowAddModal(true)}
@@ -307,7 +322,7 @@ function Customers() {
               boxShadow: "0 4px 12px rgba(255, 107, 0, 0.2)",
             }}
           >
-            + إضافة عميل جديد
+            <FiPlus size={16} style={{ marginRight: "5px" }} /> إضافة عميل جديد
           </button>
         </div>
 
@@ -350,8 +365,9 @@ function Customers() {
                         {customer.username}
                       </td>
                       <td dir="ltr" style={{ textAlign: "right" }}>
+                        {/* استخدام دالة التنظيف التلقائي الذكية للواتس */}
                         <a
-                          href={`https://api.whatsapp.com/send?phone=${customer.whatsapp.replace(/\D/g, "")}`}
+                          href={`https://api.whatsapp.com/send?phone=${formatWhatsAppNumber(customer.whatsapp)}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={(e) => e.stopPropagation()}
@@ -422,6 +438,7 @@ function Customers() {
         )}
       </main>
 
+      {/* 3. نافذة دفتر العميل (Ledger Modal) */}
       {selectedCustomer && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -486,23 +503,30 @@ function Customers() {
               <div className="form-group">
                 <label>نوع العملية</label>
                 <select
+                  value={transactionType}
+                  onChange={(e) => setTransactionType(e.target.value)}
                   style={{
                     width: "100%",
                     padding: "12px",
                     borderRadius: "10px",
-                    border: "1px solid #ddd",
+                    border: "1.5px solid #e2e8f0",
                     background: "#f8fafc",
                     fontWeight: "bold",
                     color:
                       transactionType === "PAYMENT" ? "#15803d" : "#b91c1c",
+                    outline: "none",
+                    cursor: "pointer",
                   }}
                 >
-                  <option>دفع من العميل (سداد دين)</option>
+                  <option value="PAYMENT">
+                    دفع من العميل (تنزيل من الدين) ⬇️
+                  </option>
+                  <option value="DEBT">إضافة دين (تسجيل على الحساب) ⬆️</option>
                 </select>
               </div>
 
               <div className="form-group">
-                <label>المبلغ المدفوع ($)</label>
+                <label>المبلغ ($)</label>
                 <input
                   type="number"
                   step="0.01"
@@ -513,7 +537,8 @@ function Customers() {
                   style={{
                     fontSize: "16px",
                     fontWeight: "bold",
-                    color: "#22c55e",
+                    color:
+                      transactionType === "PAYMENT" ? "#22c55e" : "#ef4444",
                   }}
                 />
               </div>
@@ -530,7 +555,7 @@ function Customers() {
 
               <div
                 className="modal-footer"
-                style={{ marginTop: "15px", paddingBottom: 0, border: "none" }}
+                style={{ marginTop: "15px", paddingOver: 0, border: "none" }}
               >
                 <button
                   type="button"
@@ -545,11 +570,12 @@ function Customers() {
                   className="modal-btn modal-btn-save"
                   style={{ backgroundColor: "#22c55e", color: "white" }}
                 >
-                  {submittingPayment ? "جاري التسجيل..." : "تسجيل العملية "}
+                  {submittingPayment ? "جاري التسجيل..." : "تسجيل العملية ✅"}
                 </button>
               </div>
             </form>
 
+            {/* قسم تغيير باسوورد العميل المنسق والآمن */}
             <div
               style={{
                 marginTop: "25px",
@@ -593,7 +619,7 @@ function Customers() {
                     margin: 0,
                   }}
                 >
-                  {updatingPassword ? "جاري التحديث..." : "تحديث "}
+                  {updatingPassword ? "جاري التحديث..." : "تحديث الباسوورد"}
                 </button>
               </div>
             </div>
@@ -623,7 +649,7 @@ function Customers() {
             </div>
 
             <div className="form-group">
-              <label>اسم المتجر (يُستخدم للبحث والـ Login)</label>
+              <label>اسم المتجر (يُسخدم للبحث والـ Login)</label>
               <input
                 type="text"
                 value={newCustomerUsername}
@@ -645,27 +671,18 @@ function Customers() {
               />
             </div>
 
-            {/* 🌟 التعديل السحري هنا: فتحنا الحقل للمدير لكي يكتب باسوورد قوي بيده 🌟 */}
             <div className="form-group">
-              <label>كلمة المرور الأولية للعميل (يجب أن تكون قوية)</label>
+              <label>كلمة المرور الافتراضية للعميل (لحساباته المستقبلية)</label>
               <input
                 type="text"
-                value={newCustomerPassword}
-                onChange={(e) => setNewCustomerPassword(e.target.value)}
-                required
-                placeholder="مثال: Khoder12345"
-                style={{ fontWeight: "bold", color: "#0f172a" }}
-              />
-              <span
+                value="123"
+                disabled
                 style={{
-                  fontSize: "11px",
-                  color: "#94a3b8",
-                  marginTop: "5px",
-                  display: "block",
+                  background: "#f1f5f9",
+                  fontWeight: "bold",
+                  color: "#64748b",
                 }}
-              >
-                💡 يجب أن تكون 8 خانات على الأقل (حرف كبير، حرف صغير، ورقم).
-              </span>
+              />
             </div>
 
             <div className="modal-footer">
@@ -686,13 +703,16 @@ function Customers() {
                   boxShadow: "0 4px 12px rgba(255, 107, 0, 0.2)",
                 }}
               >
-                {submittingCustomer ? "جاري الحفظ..." : "تسجيل العميل الجديد "}
+                {submittingCustomer
+                  ? "جاري الحفظ..."
+                  : "تسجيل العميل الجديد ✅"}
               </button>
             </div>
           </form>
         </div>
       )}
 
+      {/* الإشعارات العائمة */}
       {toastSuccess && (
         <div
           className="pwa-toast"
