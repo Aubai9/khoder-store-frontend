@@ -34,6 +34,7 @@ export default defineConfig({
         ],
       },
       workbox: {
+        cleanupOutdatedCaches: true,
         importScripts: ["/custom-sw.js"],
       },
     }),
