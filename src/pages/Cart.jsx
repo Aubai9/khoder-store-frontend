@@ -275,11 +275,34 @@ function Cart() {
                           min="1"
                         />
 
+                        {/* زر الزائد (+) المطور والمحمي بسقف المخزون */}
                         <button
                           className="qty-btn-plus"
-                          onClick={() =>
-                            updateQuantity(item.product.id, item.quantity + 1)
-                          }
+                          onClick={() => {
+                            if (item.quantity < item.product.stock) {
+                              updateQuantity(
+                                item.product.id,
+                                item.quantity + 1,
+                              );
+                            } else {
+                              // إظهار رسالة الخطأ الفخمة إذا تخطى المخزن
+                              setError(
+                                `عذراً، أقصى كمية متوفرة من هذا المنتج هي ${item.product.stock} قطع فقط.`,
+                              );
+                              // إخفاء الرسالة بعد 4 ثوانٍ
+                              setTimeout(() => setError(""), 4000);
+                            }
+                          }}
+                          // تعطيل الزر برمجياً وبصرياً إذا وصل للحد الأقصى
+                          disabled={item.quantity >= item.product.stock}
+                          style={{
+                            opacity:
+                              item.quantity >= item.product.stock ? 0.4 : 1,
+                            cursor:
+                              item.quantity >= item.product.stock
+                                ? "not-allowed"
+                                : "pointer",
+                          }}
                         >
                           <FiPlus size={14} />
                         </button>
