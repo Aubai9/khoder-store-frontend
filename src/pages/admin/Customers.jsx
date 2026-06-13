@@ -485,27 +485,19 @@ function Customers() {
             <form onSubmit={handlePaymentSubmit}>
               <div className="form-group">
                 <label>نوع العملية</label>
-                {/* 🌟 إزالة الـ disabled وتفعيل الخيارات بحرية 🌟 */}
                 <select
-                  value={transactionType}
-                  onChange={(e) => setTransactionType(e.target.value)}
                   style={{
                     width: "100%",
                     padding: "12px",
                     borderRadius: "10px",
-                    border: "1.5px solid #e2e8f0",
+                    border: "1px solid #ddd",
                     background: "#f8fafc",
                     fontWeight: "bold",
                     color:
-                      transactionType === "PAYMENT" ? "#15803d" : "#b91c1c", // يتلون أخضر للسداد وأحمر للدين
-                    outline: "none",
-                    cursor: "pointer",
+                      transactionType === "PAYMENT" ? "#15803d" : "#b91c1c",
                   }}
                 >
-                  <option value="PAYMENT">
-                    دفع من العميل (تنزيل من الدين) ⬇️
-                  </option>
-                  <option value="DEBT">إضافة دين (تسجيل على الحساب) ⬆️</option>
+                  <option>دفع من العميل (سداد دين)</option>
                 </select>
               </div>
 
