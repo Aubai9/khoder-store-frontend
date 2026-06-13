@@ -73,7 +73,6 @@ function Register() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                placeholder="مثال: خضر مادي"
               />
               <FiUser className="input-icon" size={18} />
             </div>
@@ -87,7 +86,6 @@ function Register() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
-                placeholder="مثال: متجر خضر"
               />
               <MdOutlineStorefront className="input-icon" size={18} />
             </div>
