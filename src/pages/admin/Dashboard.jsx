@@ -75,20 +75,19 @@ function Dashboard() {
   }, []);
 
   // فحص هل المتصفح مشترك ومفعل للإشعارات مسبقاً على هذا الجهاز
-  // فحص مباشر ومضمون هل السيرفيس ووركر مسجل ومفعل مسبقاً على المتصفح
+
   useEffect(() => {
     if ("serviceWorker" in navigator) {
-      // نبحث عن السيرفيس ووركر الخاص بنا مباشرة
-      navigator.serviceWorker
-        .getRegistration("/custom-sw.js")
-        .then(async (reg) => {
-          if (reg) {
-            const sub = await reg.pushManager.getSubscription();
-            if (sub) {
-              setIsSubscribed(true); // نعم، مفعّل وجاهز!
-            }
+      // جلب جميع السيرفيس ووركرز النشطة على جهاز العميل بغض النظر عن اسمها (sw.js أو custom-sw.js)
+      navigator.serviceWorker.getRegistrations().then(async (registrations) => {
+        for (let reg of registrations) {
+          const sub = await reg.pushManager.getSubscription();
+          if (sub) {
+            setIsSubscribed(true); // نعم، مفعل وجاهز كلياً!
+            break; // نكتفي بإيجاد اشتراك واحد صحيح ونقفل الدوران
           }
-        });
+        }
+      });
     }
   }, []);
 
