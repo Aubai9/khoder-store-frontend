@@ -12,15 +12,16 @@ import {
   FiClock,
   FiCheckCircle,
   FiXCircle,
-  FiHome,
-  FiSearch,
   FiSettings,
   FiDownload,
+  FiHome,
+  FiSearch,
 } from "react-icons/fi";
 import { FaSearch, FaHome } from "react-icons/fa";
 import "./Home.css";
 import "./Profile.css";
 import { io } from "socket.io-client"; // استيراد بث السوكيت
+
 function Profile() {
   const { user, logoutUser, deferredPrompt, setDeferredPrompt } =
     useContext(AuthContext);
@@ -52,43 +53,12 @@ function Profile() {
     }
   };
 
+  // 🌟 الهوك الأول: للتحقق من تسجيل الدخول وجلب الطلبيات الشخصية 🌟
   useEffect(() => {
     if (!user) {
       navigate("/login");
       return;
     }
-
-    // الاستماع الحي لتحديثات حالة الطلب من الإدارة
-    useEffect(() => {
-      if (!user) return;
-
-      // 🌟 سطر عبقري: يستخرج رابط سيرفر الريندر الحقيقي تلقائياً من الـ env ليعمل السوكيت سحابياً! 🌟
-      const socketUrl = import.meta.env.VITE_API_URL
-        ? import.meta.env.VITE_API_URL.replace("/api", "")
-        : "http://localhost:5000";
-
-      const socket = io(socketUrl);
-
-      socket.on("orderStatusUpdated", (data) => {
-        // إذا كان الطلب المحدث يخص هذا العميل بالذات
-        if (data.userId === user.id) {
-          playSuccessChime(); // تشغيل نغمة النجاح اللطيفة 🎵
-
-          // تحديث حالة الطلب في شاشة العميل فوراً وبدون ريفريش!
-          setOrders((prevOrders) =>
-            prevOrders.map((order) =>
-              order.id === data.orderId
-                ? { ...order, status: data.status }
-                : order,
-            ),
-          );
-        }
-      });
-
-      return () => {
-        socket.disconnect();
-      };
-    }, [user]);
 
     const fetchMyOrders = async () => {
       try {
@@ -103,6 +73,38 @@ function Profile() {
 
     fetchMyOrders();
   }, [user, navigate]);
+
+  // 🌟 الهوك الثاني (منفصل ومستقل بذاته في جذر المكون): للاستماع الحي للسوكيت 🌟
+  useEffect(() => {
+    if (!user) return;
+
+    // استخراج رابط سيرفر الريندر الحقيقي تلقائياً من الـ env ليعمل السوكيت سحابياً أو محلياً
+    const socketUrl = import.meta.env.VITE_API_URL
+      ? import.meta.env.VITE_API_URL.replace("/api", "")
+      : "http://localhost:5000";
+
+    const socket = io(socketUrl);
+
+    socket.on("orderStatusUpdated", (data) => {
+      // إذا كان الطلب المحدث يخص هذا العميل بالذات
+      if (data.userId === user.id) {
+        playSuccessChime(); // تشغيل نغمة النجاح اللطيفة 🎵
+
+        // تحديث حالة الطلب في شاشة العميل فوراً وبدون ريفريش!
+        setOrders((prevOrders) =>
+          prevOrders.map((order) =>
+            order.id === data.orderId
+              ? { ...order, status: data.status }
+              : order,
+          ),
+        );
+      }
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [user]);
 
   // دالة تشغيل بوب أب التثبيت المخصص للـ PWA عند نقر الزر
   const handleInstallApp = async () => {
