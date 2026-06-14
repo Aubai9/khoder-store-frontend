@@ -23,7 +23,7 @@ import {
   FiSettings,
 } from "react-icons/fi";
 import { MdOutlineStorefront } from "react-icons/md";
-
+import { io } from "socket.io-client"; // استيراد بث السوكيت
 import "./Inventory.css";
 import "./Dashboard.css";
 
