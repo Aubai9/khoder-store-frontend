@@ -41,7 +41,10 @@ function Dashboard() {
 
   // حالة الإشعار الفخم للوحة التحكم
   const [toastMsg, setToastMsg] = useState("");
-  const [isSubscribed, setIsSubscribed] = useState(false);
+  // 🌟 التعديل المطور: القراءة الفورية المتزامنة من الـ LocalStorage عند فتح الصفحة 🌟
+  const [isSubscribed, setIsSubscribed] = useState(
+    localStorage.getItem("isSubscribed") === "true",
+  );
 
   const navigate = useNavigate();
 
@@ -75,15 +78,17 @@ function Dashboard() {
   }, []);
 
   // فحص هل المتصفح مشترك ومفعل للإشعارات مسبقاً على هذا الجهاز
-
-  // فحص رسمي ومضمون 100% يقرأ حالة الاشتراك الثابتة للموقع [3]
+  // فحص خلفي صامت لتأكيد التفعيل فقط (بدون أي مسح أو تصفير عشوائي عند التحميل) [3]
   useEffect(() => {
     if ("serviceWorker" in navigator) {
-      // ننتظر حتى يكون السيرفيس ووركر الرسمي جاهزاً ونقرأ اشتراكه
-      navigator.serviceWorker.ready.then(async (registration) => {
-        const sub = await registration.pushManager.getSubscription();
-        if (sub) {
-          setIsSubscribed(true); // نعم، مفعل وجاهز دائماً!
+      navigator.serviceWorker.getRegistrations().then(async (registrations) => {
+        for (let reg of registrations) {
+          const sub = await reg.pushManager.getSubscription();
+          if (sub) {
+            setIsSubscribed(true);
+            localStorage.setItem("isSubscribed", "true"); // تأكيد الحفظ
+            break;
+          }
         }
       });
     }
@@ -130,7 +135,12 @@ function Dashboard() {
         });
 
         // إرسال الكود للباك إند لحفظه
+        // إرسال الكود للباك إند لحفظه
         await API.post("/admin/push-subscription", { subscription });
+
+        // 🌟 السطر الجديد: الحفظ الفوري المتزامن في المتصفح 🌟
+        localStorage.setItem("isSubscribed", "true");
+
         showToast("تم تفعيل إشعارات الموبايل المغلق بنجاح! ");
         setIsSubscribed(true);
       } catch (error) {
