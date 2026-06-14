@@ -20,7 +20,7 @@ import {
 import { FaSearch, FaHome } from "react-icons/fa";
 import "./Home.css";
 import "./Profile.css";
-
+import { io } from "socket.io-client"; // استيراد بث السوكيت
 function Profile() {
   const { user, logoutUser, deferredPrompt, setDeferredPrompt } =
     useContext(AuthContext);
@@ -28,11 +28,67 @@ function Profile() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  // نغمة نجاح موسيقية لطيفة تسعد الزبون عند قبول طلبه
+  const playSuccessChime = () => {
+    try {
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+      osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.15); // E5
+      osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.3); // G5
+      gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(
+        0.0001,
+        audioCtx.currentTime + 0.6,
+      );
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.6);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   useEffect(() => {
     if (!user) {
       navigate("/login");
       return;
     }
+
+    // الاستماع الحي لتحديثات حالة الطلب من الإدارة
+    useEffect(() => {
+      if (!user) return;
+
+      // 🌟 سطر عبقري: يستخرج رابط سيرفر الريندر الحقيقي تلقائياً من الـ env ليعمل السوكيت سحابياً! 🌟
+      const socketUrl = import.meta.env.VITE_API_URL
+        ? import.meta.env.VITE_API_URL.replace("/api", "")
+        : "http://localhost:5000";
+
+      const socket = io(socketUrl);
+
+      socket.on("orderStatusUpdated", (data) => {
+        // إذا كان الطلب المحدث يخص هذا العميل بالذات
+        if (data.userId === user.id) {
+          playSuccessChime(); // تشغيل نغمة النجاح اللطيفة 🎵
+
+          // تحديث حالة الطلب في شاشة العميل فوراً وبدون ريفريش!
+          setOrders((prevOrders) =>
+            prevOrders.map((order) =>
+              order.id === data.orderId
+                ? { ...order, status: data.status }
+                : order,
+            ),
+          );
+        }
+      });
+
+      return () => {
+        socket.disconnect();
+      };
+    }, [user]);
 
     const fetchMyOrders = async () => {
       try {
@@ -139,7 +195,7 @@ function Profile() {
                 className="pwa-install-btn"
                 onClick={handleInstallApp}
               >
-                <FiDownload size={18} /> ثبت التطبيق على هاتفك لتجربة أسرع 
+                <FiDownload size={18} /> ثبت التطبيق على هاتفك لتجربة أسرع
               </button>
             )}
 

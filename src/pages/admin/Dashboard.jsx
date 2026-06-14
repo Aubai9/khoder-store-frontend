@@ -48,6 +48,13 @@ function Dashboard() {
 
   const navigate = useNavigate();
 
+  // التعديل السحابي الموحد ليعمل على الويب الحقيقي بامتياز
+  const socketUrl = import.meta.env.VITE_API_URL
+    ? import.meta.env.VITE_API_URL.replace("/api", "")
+    : "http://localhost:5000";
+
+  const socket = io(socketUrl);
+
   // دالة تشغيل الإشعار المنبثق الفخم
   const showToast = (msg) => {
     setToastMsg(msg);
