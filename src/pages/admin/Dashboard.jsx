@@ -87,36 +87,27 @@ function Dashboard() {
   // فحص هل المتصفح مشترك ومفعل للإشعارات مسبقاً على هذا الجهاز
   // فحص خلفي صامت لتأكيد التفعيل فقط (بدون أي مسح أو تصفير عشوائي عند التحميل) [3]
   // 🌟 ميزة المزامنة الصامتة التلقائية: فحص وإعادة حجز التوكن في الداتا بيز الجديدة حتى لو تم تصفيرها 🌟
+  // فحص مباشر ومضمون هل السيرفيس ووركر جاهز ومشترك مسبقاً
   useEffect(() => {
-    if ("serviceWorker" in navigator && user) {
-      // نبحث عن السيرفيس ووركر الخاص بنا مباشرة
-      navigator.serviceWorker
-        .getRegistration("/custom-sw.js")
-        .then(async (reg) => {
-          if (reg) {
-            const sub = await reg.pushManager.getSubscription();
-            if (sub) {
-              setIsSubscribed(true); // نعم، المتصفح مشترك مسبقاً!
+    if ("serviceWorker" in navigator) {
+      // ننتظر السيرفيس ووركر ليكون جاهزاً (وهو الذي سجلناه في main.jsx)
+      navigator.serviceWorker.ready.then(async (reg) => {
+        const sub = await reg.pushManager.getSubscription();
+        if (sub) {
+          setIsSubscribed(true); // نعم، مشترك مسبقاً!
 
-              // 🔄 نقوم بإرسال الاشتراك للباك إند تلقائياً في الخلفية لنضمن حفظه بقاعدة البيانات الجديدة 🔄
-              try {
-                await API.post("/admin/push-subscription", {
-                  subscription: sub,
-                });
-                console.log(
-                  "🔄 تم إعادة مزامنة اشتراك الإشعارات مع قاعدة البيانات الجديدة تلقائياً.",
-                );
-              } catch (err) {
-                console.error(
-                  "فشلت المزامنة التلقائية للإشعارات، قد تحتاج للضغط على زر التفعيل يدوياً",
-                  err,
-                );
-              }
-            }
+          // مزامنة صامتة لتحديث قاعدة البيانات بالتوكن الحي في حال حدوث أي تصفير
+          try {
+            await API.post("/admin/push-subscription", { subscription: sub });
+            console.log("🔄 تم مزامنة اشتراك الإشعارات بنجاح.");
+          } catch (err) {
+            console.log("فشلت المزامنة الصامتة");
           }
-        });
+        }
+      });
     }
-  }, [user]); // اضفنا user ليعمل الفحص فور تسجيل الدخول
+  }, []);
+
   // دالة تحويل تشفير المفتاح (مطلوبة تقنياً لمتصفحات الجوال)
   const urlBase64ToUint8Array = (base64String) => {
     const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
@@ -133,49 +124,41 @@ function Dashboard() {
 
   // دالة طلب الإذن من المتصفح وتفعيل اشتراك الإشعارات المغلقة
   // دالة طلب الإذن من المتصفح وتفعيل الاشتراك المباشر لـ custom-sw.js
-  // دالة طلب الإذن والتفعيل السحابي الرسمي باستخدام السيرفيس ووركر الجاهز للتطبيق [3]
+
+  // دالة طلب الإذن من المتصفح وتفعيل الاشتراك المباشر
   const subscribeToNotifications = async () => {
     if ("serviceWorker" in navigator && "PushManager" in window) {
       try {
         const permission = await Notification.requestPermission();
         if (permission !== "granted") {
-          showToast(" يجب السماح بالإشعارات من إعدادات المتصفح أولاً.");
+          showToast("❌ يجب السماح بالإشعارات من إعدادات المتصفح أولاً.");
           return;
         }
 
-        showToast("جاري تهيئة الاتصال السحابي..");
+        showToast("جاري تهيئة الاتصال السحابي... ⏳");
 
-        const registration =
-          await navigator.serviceWorker.getRegistration("/custom-sw.js");
+        // 🌟 التعديل الصحيح: ننتظر الجاهزية مباشرة بدون تمرير اسم الملف 🌟
+        const registration = await navigator.serviceWorker.ready;
+        console.log("عامل الخلفية جاهز للاتصال السحابي:", registration);
 
-        console.log("تم الاتصال بالسيرفيس ووركر الرسمي:", registration);
-        if (!registration) {
-          showToast("⏳ جاري تهيئة الاتصال... أعد المحاولة بعد ثوانٍ");
-          return;
-        }
         const publicVapidKey = import.meta.env.VITE_VAPID_PUBLIC_KEY;
 
-        // توليد كود الاشتراك المشفر بشكل رسمي وثابت [3]
+        // توليد كود الاشتراك المشفر
         const subscription = await registration.pushManager.subscribe({
           userVisibleOnly: true,
           applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
         });
 
         // إرسال الكود للباك إند لحفظه
-        // إرسال الكود للباك إند لحفظه
         await API.post("/admin/push-subscription", { subscription });
-
-        // 🌟 السطر الجديد: الحفظ الفوري المتزامن في المتصفح 🌟
-        localStorage.setItem("isSubscribed", "true");
-
-        showToast("تم تفعيل إشعارات الموبايل المغلق بنجاح! ");
+        showToast("تم تفعيل إشعارات الموبايل المغلق بنجاح! 🔔✅");
         setIsSubscribed(true);
       } catch (error) {
         console.error("فشل تفعيل الإشعارات:", error);
-        showToast(" فشل تفعيل الإشعارات السحابية.");
+        showToast("❌ فشل تفعيل الإشعارات السحابية.");
       }
     } else {
-      showToast(" متصفحك لا يدعم إشعارات الدفع المغلقة.");
+      showToast("❌ متصفحك لا يدعم إشعارات الدفع المغلقة.");
     }
   };
 
