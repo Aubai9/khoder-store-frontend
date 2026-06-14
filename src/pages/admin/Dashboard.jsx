@@ -76,16 +76,14 @@ function Dashboard() {
 
   // فحص هل المتصفح مشترك ومفعل للإشعارات مسبقاً على هذا الجهاز
 
+  // فحص رسمي ومضمون 100% يقرأ حالة الاشتراك الثابتة للموقع [3]
   useEffect(() => {
     if ("serviceWorker" in navigator) {
-      // جلب جميع السيرفيس ووركرز النشطة على جهاز العميل بغض النظر عن اسمها (sw.js أو custom-sw.js)
-      navigator.serviceWorker.getRegistrations().then(async (registrations) => {
-        for (let reg of registrations) {
-          const sub = await reg.pushManager.getSubscription();
-          if (sub) {
-            setIsSubscribed(true); // نعم، مفعل وجاهز كلياً!
-            break; // نكتفي بإيجاد اشتراك واحد صحيح ونقفل الدوران
-          }
+      // ننتظر حتى يكون السيرفيس ووركر الرسمي جاهزاً ونقرأ اشتراكه
+      navigator.serviceWorker.ready.then(async (registration) => {
+        const sub = await registration.pushManager.getSubscription();
+        if (sub) {
+          setIsSubscribed(true); // نعم، مفعل وجاهز دائماً!
         }
       });
     }
@@ -107,25 +105,25 @@ function Dashboard() {
 
   // دالة طلب الإذن من المتصفح وتفعيل اشتراك الإشعارات المغلقة
   // دالة طلب الإذن من المتصفح وتفعيل الاشتراك المباشر لـ custom-sw.js
+  // دالة طلب الإذن والتفعيل السحابي الرسمي باستخدام السيرفيس ووركر الجاهز للتطبيق [3]
   const subscribeToNotifications = async () => {
     if ("serviceWorker" in navigator && "PushManager" in window) {
       try {
         const permission = await Notification.requestPermission();
         if (permission !== "granted") {
-          showToast("❌ يجب السماح بالإشعارات من إعدادات المتصفح أولاً.");
+          showToast(" يجب السماح بالإشعارات من إعدادات المتصفح أولاً.");
           return;
         }
 
-        showToast("جاري تهيئة الاتصال السحابي... ⏳");
+        showToast("جاري تهيئة الاتصال السحابي..");
 
-        // 🌟 التعديل السحري: تسجيل السيرفيس ووركر مباشرة من مجلد public ليتفادى تجمد Vite 🌟
-        const registration =
-          await navigator.serviceWorker.register("/custom-sw.js");
-        console.log("تم تسجيل عامل الخلفية بنجاح:", registration);
+        // 🌟 التعديل النهائي والمنقذ: استخدام السيرفيس ووركر الرسمي المفعّل مسبقاً للموقع 🌟
+        const registration = await navigator.serviceWorker.ready;
+        console.log("تم الاتصال بالسيرفيس ووركر الرسمي:", registration);
 
         const publicVapidKey = import.meta.env.VITE_VAPID_PUBLIC_KEY;
 
-        // توليد كود الاشتراك المشفر
+        // توليد كود الاشتراك المشفر بشكل رسمي وثابت [3]
         const subscription = await registration.pushManager.subscribe({
           userVisibleOnly: true,
           applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
@@ -137,10 +135,10 @@ function Dashboard() {
         setIsSubscribed(true);
       } catch (error) {
         console.error("فشل تفعيل الإشعارات:", error);
-        showToast("❌ فشل تفعيل الإشعارات السحابية.");
+        showToast(" فشل تفعيل الإشعارات السحابية.");
       }
     } else {
-      showToast("❌ متصفحك لا يدعم إشعارات الدفع المغلقة.");
+      showToast(" متصفحك لا يدعم إشعارات الدفع المغلقة.");
     }
   };
 
