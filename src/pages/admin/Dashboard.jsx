@@ -86,21 +86,37 @@ function Dashboard() {
 
   // فحص هل المتصفح مشترك ومفعل للإشعارات مسبقاً على هذا الجهاز
   // فحص خلفي صامت لتأكيد التفعيل فقط (بدون أي مسح أو تصفير عشوائي عند التحميل) [3]
+  // 🌟 ميزة المزامنة الصامتة التلقائية: فحص وإعادة حجز التوكن في الداتا بيز الجديدة حتى لو تم تصفيرها 🌟
   useEffect(() => {
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.getRegistrations().then(async (registrations) => {
-        for (let reg of registrations) {
-          const sub = await reg.pushManager.getSubscription();
-          if (sub) {
-            setIsSubscribed(true);
-            localStorage.setItem("isSubscribed", "true"); // تأكيد الحفظ
-            break;
-          }
-        }
-      });
-    }
-  }, []);
+    if ("serviceWorker" in navigator && user) {
+      // نبحث عن السيرفيس ووركر الخاص بنا مباشرة
+      navigator.serviceWorker
+        .getRegistration("/custom-sw.js")
+        .then(async (reg) => {
+          if (reg) {
+            const sub = await reg.pushManager.getSubscription();
+            if (sub) {
+              setIsSubscribed(true); // نعم، المتصفح مشترك مسبقاً!
 
+              // 🔄 نقوم بإرسال الاشتراك للباك إند تلقائياً في الخلفية لنضمن حفظه بقاعدة البيانات الجديدة 🔄
+              try {
+                await API.post("/admin/push-subscription", {
+                  subscription: sub,
+                });
+                console.log(
+                  "🔄 تم إعادة مزامنة اشتراك الإشعارات مع قاعدة البيانات الجديدة تلقائياً.",
+                );
+              } catch (err) {
+                console.error(
+                  "فشلت المزامنة التلقائية للإشعارات، قد تحتاج للضغط على زر التفعيل يدوياً",
+                  err,
+                );
+              }
+            }
+          }
+        });
+    }
+  }, [user]); // اضفنا user ليعمل الفحص فور تسجيل الدخول
   // دالة تحويل تشفير المفتاح (مطلوبة تقنياً لمتصفحات الجوال)
   const urlBase64ToUint8Array = (base64String) => {
     const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
