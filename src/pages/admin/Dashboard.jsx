@@ -145,10 +145,14 @@ function Dashboard() {
 
         showToast("جاري تهيئة الاتصال السحابي..");
 
-        // 🌟 التعديل النهائي والمنقذ: استخدام السيرفيس ووركر الرسمي المفعّل مسبقاً للموقع 🌟
-        const registration = await navigator.serviceWorker.ready;
-        console.log("تم الاتصال بالسيرفيس ووركر الرسمي:", registration);
+        const registration =
+          await navigator.serviceWorker.getRegistration("/custom-sw.js");
 
+        console.log("تم الاتصال بالسيرفيس ووركر الرسمي:", registration);
+        if (!registration) {
+          showToast("⏳ جاري تهيئة الاتصال... أعد المحاولة بعد ثوانٍ");
+          return;
+        }
         const publicVapidKey = import.meta.env.VITE_VAPID_PUBLIC_KEY;
 
         // توليد كود الاشتراك المشفر بشكل رسمي وثابت [3]

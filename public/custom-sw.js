@@ -25,3 +25,8 @@ self.addEventListener("notificationclick", function (event) {
   // فتح التطبيق وتوجيه المدير لصفحة الطلبات فوراً
   event.waitUntil(clients.openWindow(event.notification.data.url));
 });
+
+// 3. الاستماع لطلبات جلب البيانات (إجباري لكي يعتبره المتصفح تطبيق PWA قابل للتثبيت وعمله بدون إنترنت)
+self.addEventListener("fetch", function (event) {
+  // وجود هذا المستمع فارغاً يكفي لمتطلبات جوجل لتثبيت التطبيق بنجاح!
+});

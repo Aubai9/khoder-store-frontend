@@ -1,45 +1,19 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import "./index.css";
+// src/main.jsx
+import React from "react";
+import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
+import "./index.css";
 
-import { registerSW } from "virtual:pwa-register";
+// 🌟 التعديل المضمون 100%: تسجيل السيرفيس ووركر الموحد والخاص بنا يدوياً لمنع أي تعارض 🌟
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker
+    .register("/custom-sw.js")
+    .then((reg) => console.log("🍿 تم تسجيل السيرفيس ووركر الموحد بنجاح!", reg))
+    .catch((err) => console.log("❌ فشل تسجيل السيرفيس ووركر", err));
+}
 
-const clearStaleCaches = async () => {
-  if (!("serviceWorker" in navigator)) return;
-
-  try {
-    const registrations = await navigator.serviceWorker.getRegistrations();
-    await Promise.all(
-      registrations.map((registration) => registration.unregister()),
-    );
-
-    const cacheNames = await caches.keys();
-    await Promise.all(cacheNames.map((cacheName) => caches.delete(cacheName)));
-  } catch (error) {
-    console.warn("تعذر تنظيف الكاش القديم:", error);
-  }
-};
-
-clearStaleCaches();
-
-// تفعيل التسجيل التلقائي مع تنظيف النسخ القديمة
-const updateSW = registerSW({
-  immediate: true,
-  skipWaiting: true,
-  clientsClaim: true,
-  onNeedRefresh() {
-    if (
-      window.confirm("تم العثور على تحديث جديد للتطبيق. هل تريد التحديث الآن؟")
-    ) {
-      updateSW(true);
-    }
-  },
-  onOfflineReady() {},
-});
-
-createRoot(document.getElementById("root")).render(
-  <StrictMode>
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
     <App />
-  </StrictMode>,
+  </React.StrictMode>,
 );
